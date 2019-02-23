@@ -1,34 +1,27 @@
-import { useState, useEffect, RefObject } from "react";
-import invariant from "tiny-invariant";
+import { useState, useEffect, RefObject } from 'react';
 
 export enum STATES {
-  unmounted = "unmounted",
-  entering = "entering",
-  entered = "entered",
-  exiting = "exiting",
-  exited = "exited"
+  unmounted = 'unmounted',
+  entering = 'entering',
+  entered = 'entered',
+  exiting = 'exiting',
+  exited = 'exited',
 }
 
-type Options =
-  | number
-  | {
-      timeout?: number;
-      unmountOnExited?: boolean;
-      triggerReflowOnMount?: boolean;
-    };
+type Options = {
+  unmountOnExited?: boolean;
+  triggerReflowOnMount?: boolean;
+};
 
-function useTransition(isOpen: boolean, options: Options = {}) {
-  const timeout = typeof options === "number" ? options : options.timeout;
-  const unmountOnExited =
-    typeof options !== "number" && !!options.unmountOnExited;
-
-  invariant(
-    typeof timeout === "number" && timeout >= 0,
-    "`timeout` should be a number greater or equal to 0."
-  );
+function useTransition(
+  isActive: boolean,
+  timeout: number,
+  options: Options = {}
+) {
+  const unmountOnExited = !!options.unmountOnExited;
 
   const [state, setState] = useState(() => {
-    if (isOpen) {
+    if (isActive) {
       return STATES.entered;
     }
 
@@ -36,7 +29,7 @@ function useTransition(isOpen: boolean, options: Options = {}) {
   });
 
   useEffect(() => {
-    if (isOpen) {
+    if (isActive) {
       switch (state) {
         case STATES.unmounted:
           setState(STATES.exited);
@@ -48,7 +41,7 @@ function useTransition(isOpen: boolean, options: Options = {}) {
         case STATES.entering: {
           const timer = setTimeout(() => {
             setState(STATES.entered);
-          }, timeout || 0);
+          }, timeout);
 
           return () => clearTimeout(timer);
         }
@@ -64,7 +57,7 @@ function useTransition(isOpen: boolean, options: Options = {}) {
         case STATES.exiting: {
           const timer = setTimeout(() => {
             setState(STATES.exited);
-          }, timeout || 0);
+          }, timeout);
 
           return () => clearTimeout(timer);
         }
@@ -80,22 +73,22 @@ function useTransition(isOpen: boolean, options: Options = {}) {
     }
 
     return;
-  }, [isOpen, state, timeout, unmountOnExited]);
+  }, [isActive, state, timeout, unmountOnExited]);
 
   return state;
 }
 
 export function useTriggerReflow(
-  isOpen: boolean,
+  isActive: boolean,
   state: STATES,
   targetRef: RefObject<HTMLElement>
 ) {
   useEffect(() => {
-    if (isOpen && state === STATES.exited) {
+    if (isActive && state === STATES.exited) {
       // @ts-ignore
       targetRef.current && targetRef.current.offsetWidth;
     }
-  }, [isOpen, state, targetRef]);
+  }, [isActive, state, targetRef]);
 }
 
 export default useTransition;
