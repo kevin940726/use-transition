@@ -2,7 +2,6 @@
   "name": "use-transition",
   "version": "0.1.2",
   "description": "use transition hook for React",
-  "main": "src/index.ts",
   "author": "Kai Hao",
   "license": "MIT",
   "scripts": {
@@ -16,31 +15,19 @@
       ],
       [
         "@pika/plugin-build-web"
-      ],
-      [
-        "@pika/plugin-bundle-web"
-      ],
-      [
-        "@pika/plugin-build-umd",
-        {
-          "name": "useTransition"
-        }
       ]
     ]
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
     "@pika/pack": "^0.3.2",
-    "@pika/plugin-build-umd": "^0.3.11",
     "@pika/plugin-build-web": "^0.3.11",
-    "@pika/plugin-bundle-web": "^0.3.11",
     "@pika/plugin-ts-standard-pkg": "^0.3.11",
     "@types/react": "^16.8.4",
     "prettier": "1.16.4",
     "typescript": "^3.3.3333"
   },
   "peerDependencies": {
-    "react": "^16.8.3"
-  },
-  "dependencies": {}
+    "react": ">= 16.8.0"
+  }
 }

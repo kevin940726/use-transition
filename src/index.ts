@@ -10,7 +10,6 @@ export enum STATES {
 
 type Options = {
   unmountOnExited?: boolean;
-  triggerReflowOnMount?: boolean;
 };
 
 function useTransition(
